@@ -1,2 +1,2 @@
 # fantasy2017
-Fantasy Football @017 done with Python and Postgres implementation
+Fantasy Football 2017 done with Python and Postgres implementation
