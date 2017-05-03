@@ -4,21 +4,20 @@ Created on May 1, 2017
 @author: wookiee
 '''
 from Tkinter import *
-import login
 
-def mainMenu(name):
+def menu(User):
     global r
     r = Tk() # Opens new window
-    string = "Welcome " + name
+    string = "Welcome " + User.username
     r.title(string)
     r.geometry('500x500') # Makes the window a certain size
     fmL = Label(r, text='Fantasy Football Manager 2017') # "logged in" label
     mainL = Label(r, text='MAIN MENU') # "logged in" label
     
-    fmL.grid(row=0, column=5, sticky=W)
-    mainL.grid(row=1, column=9, sticky=W)
+    fmL.grid(sticky=W)
+    mainL.grid(sticky=W)
     
-    simulateB = Button(r, text='Simulate', command=simulate)
+    simulateB = Button(r, text='Simulate Game', command=simulate)
     simulateB.grid(columnspan=10, sticky=N)
     
     viewTeamB = Button(r, text='View Team', command=viewTeam)
@@ -49,7 +48,7 @@ def profileOptions():
     
 def logOut():
     r.destroy()
-    login.Login()
     
-
+    
+    
     
