@@ -1,165 +1,105 @@
+'''
+Created on May 1, 2017
+
+@author: wookiee
+'''
 from Tkinter import *
 from PIL import Image, ImageTk
-from User import User
-from mainMenu import menu
-import os
+from research import research
 
-userList = []
-creds = 'login.txt' # This just sets the variable creds for txt file
-teams = ["Arizona Cardinals","Atlanta Falcons","Baltimore Ravens","Buffalo Bills"
-              ,"Carolina Panthers","Chicago Bears","Cincinnati Bengals","Cleveland Browns"
-              ,"Dallas Cowboys","Denver Broncos","Detroit Lions","Green Bay Packers"
-              ,"Houston Texans","Indianapolis Colts","Jacksonville Jaguars","Kansas City Chiefs"
-              ,"Miami Dolphins","Minnesota Vikings","New England Patriots","New Orleans Saints"
-              ,"Los Angeles Chargers","Los Angeles Rams","New York Giants","New York Jets"
-              ,"Oakland Raiders","Philadelphia Eagles","Pittsburgh Steelers","San Francisco 49ers"
-              ,"Seattle Seahawks","Tampa Bay Buccaneers","Tennessee Titans","Washington Redskins"]
-
-def Login():
-    global nameEL
-    global pwordEL # More globals :D
-    global rootA
- 
-    rootA = Tk() # This now makes a new window.
-    rootA.geometry('450x500') # Makes the window a certain size
-    rootA.title('\t\tWelcome to Fantasy Football Manager 2017\t\t') # This makes the window title 'login'
+def menu(User):
+    global r
+    r = Tk() # Opens new window
+    string = "Fantasy Football Manger 2017"
+    #string = "Welcome " + User.username
+    r.title(string)
+    r.geometry('450x450') # Makes the window a certain size
+    getPic = getTeamPic(User.favoriteTeam)
     
-    image = Image.open("./pics/logo.jpg") #adding the image to window
+    image = Image.open(getPic) #adding the image to window
+    image = image.resize((230,230), Image.ANTIALIAS)
     img = ImageTk.PhotoImage(image)
-    panel = Label(rootA, image = img)
-    panel.grid(sticky=W)
+    panel = Label(r, image = img)
+    #panel.grid(sticky=W)
     
-    intruction = Label(rootA, text='Please Login\n') # More labels to tell us what they do
-    intruction.grid(row=1,sticky=S)
- 
-    nameL = Label(rootA, text='Username: ') # More labels
-    pwordL = Label(rootA, text='Password: ') # ^
-    nameL.grid(row=2, sticky=W)
-    pwordL.grid(row=3, sticky=W)
- 
-    nameEL = Entry(rootA) # The entry input     CHECK FOR EMPTY PASS AND USER
-    pwordEL = Entry(rootA, show='*')
-    nameEL.grid(row=2, column=0)
-    pwordEL.grid(row=3, column=0)
- 
-    loginB = Button(rootA, text='Login', command=CheckLogin) # This makes the login button, which will go to the CheckLogin def.
-    loginB.grid(columnspan=2, sticky=N)
+    panel.place(x=200,y=0)
+    
+    #fmL = Label(r, text='Fantasy Football Manager 2017') # "logged in" label
+    fmL = Label(r, text="\nWelcome "+ User.username) # "logged in" label
+    mainL = Label(r, text='\nMAIN MENU\n') # "logged in" label
+    fmL.grid(row=1, column=2,sticky=W)
+    mainL.grid(row=2,column=2,sticky=W)
+    
+    simulateB = Button(r, text='Simulate Game', command=simulate)
+    #simulateB.grid(columnspan=10, sticky=N)
+    simulateB.grid(row=3,column=2,sticky=W)
+    
+    viewTeamB = Button(r, text='  View Team  ', command=viewTeam)
+    #viewTeamB.grid(columnspan=10, sticky=N)
+    viewTeamB.grid(row=4,column=2,sticky=W)
 
-    nmuser = Button(rootA, text='New User', command=Signup) # This makes the deluser button. blah go to the deluser def.
-    nmuser.grid(columnspan=2, sticky=N)
+    researchB = Button(r, text='  Research   ', command=reseach)
+    #researchB.grid(columnspan=10, sticky=N)
+    researchB.grid(row=5,column=2,sticky=W)
     
-    closer = Button(rootA, text='Quit', command=Quit) # This closes the program
-    closer.grid(columnspan=2, sticky=N)
+    logoutB = Button(r, text='   Log Out     ', command=logOut)
+    #logoutB.grid(columnspan=10, sticky=N)
+    logoutB.grid(row=6,column=2,sticky=W)
     
-    rootA.mainloop()
-
-def Signup(): # This is the signup definition,
-    rootA.destroy() 
-    global pwordE # These globals just make the variables global to the entire script, meaning any definition can use them
-    global nameE
-    global dropVar
-    global chosenFav
-    global roots
- 
-    roots = Tk() # This creates the window, just a blank one.
-    roots.title('Signup') # This renames the title of said window to 'signup'
-    roots.geometry('450x300') # Makes the window a certain size
+    r.mainloop()
+def getTeamPic(myTeam):
+    teams = {"Arizona Cardinals":"./teamLogo/cardinals.jpeg",
+             "Atlanta Falcons":"./teamLogo/falcons.jpeg",
+             "Baltimore Ravens":"./teamLogo/ravens.jpeg",
+             "Buffalo Bills":"./teamLogo/bills.jpeg",
+             "Carolina Panthers":"./teamLogo/panthers.jpeg",
+             "Chicago Bears":"./teamLogo/bears.jpeg",
+             "Cincinnati Bengals":"./teamLogo/bengals.jpeg",
+             "Cleveland Browns":"./teamLogo/browns.jpeg",
+             "Dallas Cowboys":"./teamLogo/cowboys.jpeg",
+             "Denver Broncos":"./teamLogo/broncos.jpeg",
+             "Detroit Lions":"./teamLogo/lions.jpeg",
+             "Green Bay Packers":"./teamLogo/packers.jpeg",
+             "Houston Texans":"./teamLogo/texans.jpeg",
+             "Indianapolis Colts":"./teamLogo/colts.jpeg",
+             "Jacksonville Jaguars":"./teamLogo/jaguars.jpeg",
+             "Kansas City Chiefs":"./teamLogo/chiefs.jpeg",
+             "Miami Dolphins":"./teamLogo/dolphins.jpeg",
+             "Minnesota Vikings":"./teamLogo/vikings.jpeg",
+             "New England Patriots":"./teamLogo/patriots.jpeg",
+             "New Orleans Saints":"./teamLogo/saints.jpeg",
+             "Los Angeles Chargers":"./teamLogo/chargers.jpeg",
+             "Los Angeles Rams":"./teamLogo/rams.jpeg",
+             "New York Giants":"./teamLogo/giants.jpeg",
+             "New York Jets":"./teamLogo/jets.jpeg",
+             "Oakland Raiders":"./teamLogo/raiders.jpeg",
+             "Philadelphia Eagles":"./teamLogo/eagles.jpeg",
+             "Pittsburgh Steelers":"./teamLogo/steelers.jpeg",
+             "San Francisco 49ers":"./teamLogo/49ers.jpeg",
+             "Seattle Seahawks":"./teamLogo/seahawks.jpeg",
+             "Tampa Bay Buccaneers":"./teamLogo/buccaneers.jpeg",
+             "Tennessee Titans":"./teamLogo/titans.jpeg",
+             "Washington Redskins":"./teamLogo/redskins.jpeg"}
     
-    intruction = Label(roots, text='Creating a new fantasy manger profile') # This puts a label, so just a piece of text saying 'please enter blah'
-    intruction.grid(row=0, column=0, sticky=E) # This just puts it in the window, on row 0, col 0. If you want to learn more look up a tkinter tutorial :)
- 
-    nameL = Label(roots, text='New Username: ') # This just does the same as above, instead with the text new username.
-    pwordL = Label(roots, text='New Password: ') # ^^
-    favLabel = Label(roots, text='Choose your favorite team:') # ^^
-    
-    nameL.grid(row=1, column=0, sticky=W) # Same thing as the instruction var just on different rows. :) Tkinter is like that.
-    pwordL.grid(row=2, column=0, sticky=W) # ^^
-    favLabel.grid(row=3, column=0, sticky=W) # ^^
-
- 
-    nameE = Entry(roots) # This now puts a text box waiting for input.
-    pwordE = Entry(roots, show='*') # Same as above, yet 'show="*"' What this does is replace the text with *, like a password box :D
-    nameE.grid(row=1, column=1) # You know what this does now :D
-    pwordE.grid(row=2, column=1) # ^^
-    
-    
-    dropVar=StringVar()
-    dropVar.set(teams[0]) # default choice
-    dropMenu1 = OptionMenu(roots, dropVar, *teams,command=favTeamSelect) #note:drop menu shows option if only screen active
-    dropMenu1.config(width=20)
-    dropMenu1.grid(row=3,column=1,sticky=EW)
-      
-    signupButton = Button(roots, text='Signup', command=FSSignup) # This creates the button with the text 'signup', when you click it, the command 'fssignup' will run. which is the def
-    signupButton.grid(row=5,column=0)
-    
-    #closer = Button(roots, text='Back', command=Quit) # This closes the program
-    #closer.grid(row=5,column=1,sticky=W)
-    
-    roots.mainloop() # This just makes the window keep open, we will destroy it soon
-    
-def favTeamSelect(*args):
-    print dropVar.get()
-    
-def FSSignup():
-    with open(creds, 'a') as f: # Creates a document using the variable we made at the top. 'a' is for append
-        f.write(nameE.get()) # nameE is the variable we were storing the input to. Tkinter makes us use .get() to get the actual string.
-        f.write('\n') # Splits the line so both variables are on different lines.
-        f.write(pwordE.get()) # Same as nameE just with pword var
-        f.write('\n')
-        f.write(dropVar.get()) # Same as nameE just with pword var
-        f.write('\n')
-        f.close() # Closes the file
-    
-    createUsers()
-    roots.destroy() # This will destroy the signup window. :)
-    Login()
-
-def CheckLogin():
-    flag = 0
-    print userList
-    for user in userList:
-        print user.username
-        print user.password
-        if nameEL.get() == user.username and pwordEL.get() == user.password: # Checks to see if you entered the correct data.
-            rootA.destroy()
-            menu(user)
-            flag = 1
-            Login() # Return to login menu after user logs out
-            
-    if flag == 0:
-        r = Tk()
-        r.title('Please Try Again')
-        r.geometry('250x100')
-        rlbl = Label(r, text='\n[!] Invalid Login')
-        rlbl.pack()
-        r.mainloop()    
+    return teams[myTeam]
         
-def DelUser():
-    os.remove(creds) # Removes the file
-    rootA.destroy() # Destroys the login window
-    Signup() # And goes back to the start!
+def simulate():
+    print 'simulate'
+     
+def viewTeam():
+    print 'viewing team'
+
+def viewSchedules():
+    print 'view schedules'
+     
+def reseach():
+    print 'research'
+    research()
     
-def Quit():
-    rootA.destroy()
-
-def createUsers():
-    del userList[:]
-    with open(creds) as f:
-        try:
-            while 1:
-                uname = f.next().rstrip()
-                pword = f.next().rstrip()
-                favTeam = f.next().rstrip()
-                user = User(uname,pword,favTeam)
-                userList.append(user)
-                
-        except: StopIteration
-
-                
-#Begin Fantasy manager login
-createUsers()
-if os.path.isfile(creds):
-    Login()
-else: # This if else statement checks to see if the file exists. If it does it will go to Login, if not it will go to Signup :)
-    Signup()
+def profileOptions():
+    print 'options'
+    
+def logOut():
+    r.destroy()
+    
     
