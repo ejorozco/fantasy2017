@@ -11,8 +11,8 @@ class User:
     custom team they created
     """
 
-    def __init__(self, username, password):
+    def __init__(self, username, password,favoriteTeam):
         self.username = username
         self.password = password
-        #self.favoriteTeam = favoriteTeam
+        self.favoriteTeam = favoriteTeam
         #self.customID = customID
