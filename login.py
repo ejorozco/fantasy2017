@@ -6,6 +6,14 @@ import os
 
 userList = []
 creds = 'login.txt' # This just sets the variable creds for txt file
+teams = ["Arizona Cardinals","Atlanta Falcons","Baltimore Ravens","Buffalo Bills"
+              ,"Carolina Panthers","Chicago Bears","Cincinnati Bengals","Cleveland Browns"
+              ,"Dallas Cowboys","Denver Broncos","Detroit Lions","Green Bay Packers"
+              ,"Houston Texans","Indianapolis Colts","Jacksonville Jaguars","Kansas City Chiefs"
+              ,"Miami Dolphins","Minnesota Vikings","New England Patriots","New Orleans Saints"
+              ,"Los Angeles Chargers","Los Angeles Rams","New York Giants","New York Jets"
+              ,"Oakland Raiders","Philadelphia Eagles","Pittsburgh Steelers","San Francisco 49ers"
+              ,"Seattle Seahawks","Tampa Bay Buccaneers","Tennessee Titans","Washington Redskins"]
 
 def Login():
     global nameEL
@@ -16,7 +24,7 @@ def Login():
     rootA.geometry('450x500') # Makes the window a certain size
     rootA.title('\t\tWelcome to Fantasy Football Manager 2017\t\t') # This makes the window title 'login'
     
-    image = Image.open("logo.jpg") #adding the image to window
+    image = Image.open("./pics/logo.jpg") #adding the image to window
     img = ImageTk.PhotoImage(image)
     panel = Label(rootA, image = img)
     panel.grid(sticky=W)
@@ -29,7 +37,7 @@ def Login():
     nameL.grid(row=2, sticky=W)
     pwordL.grid(row=3, sticky=W)
  
-    nameEL = Entry(rootA) # The entry input
+    nameEL = Entry(rootA) # The entry input     CHECK FOR EMPTY PASS AND USER
     pwordEL = Entry(rootA, show='*')
     nameEL.grid(row=2, column=0)
     pwordEL.grid(row=3, column=0)
@@ -45,31 +53,66 @@ def Login():
     
     rootA.mainloop()
 
-def Signup(): # This is the signup definition, 
+def Signup(): # This is the signup definition,
+    rootA.destroy() 
     global pwordE # These globals just make the variables global to the entire script, meaning any definition can use them
     global nameE
+    global dropVar
+    global chosenFav
     global roots
  
     roots = Tk() # This creates the window, just a blank one.
     roots.title('Signup') # This renames the title of said window to 'signup'
+    roots.geometry('450x300') # Makes the window a certain size
     
-    intruction = Label(roots, text='Please Enter new Credidentials\n') # This puts a label, so just a piece of text saying 'please enter blah'
+    intruction = Label(roots, text='Creating a new fantasy manger profile') # This puts a label, so just a piece of text saying 'please enter blah'
     intruction.grid(row=0, column=0, sticky=E) # This just puts it in the window, on row 0, col 0. If you want to learn more look up a tkinter tutorial :)
  
     nameL = Label(roots, text='New Username: ') # This just does the same as above, instead with the text new username.
     pwordL = Label(roots, text='New Password: ') # ^^
+    favLabel = Label(roots, text='Choose your favorite team:') # ^^
+    
     nameL.grid(row=1, column=0, sticky=W) # Same thing as the instruction var just on different rows. :) Tkinter is like that.
     pwordL.grid(row=2, column=0, sticky=W) # ^^
+    favLabel.grid(row=3, column=0, sticky=W) # ^^
+
  
     nameE = Entry(roots) # This now puts a text box waiting for input.
     pwordE = Entry(roots, show='*') # Same as above, yet 'show="*"' What this does is replace the text with *, like a password box :D
     nameE.grid(row=1, column=1) # You know what this does now :D
     pwordE.grid(row=2, column=1) # ^^
     
+    
+    dropVar=StringVar()
+    dropVar.set(teams[0]) # default choice
+    dropMenu1 = OptionMenu(roots, dropVar, *teams,command=favTeamSelect) #note:drop menu shows option if only screen active
+    dropMenu1.config(width=20)
+    dropMenu1.grid(row=3,column=1,sticky=EW)
+      
     signupButton = Button(roots, text='Signup', command=FSSignup) # This creates the button with the text 'signup', when you click it, the command 'fssignup' will run. which is the def
-    signupButton.grid(columnspan=2, sticky=W)
+    signupButton.grid(row=5,column=0)
+    
+    #closer = Button(roots, text='Back', command=Quit) # This closes the program
+    #closer.grid(row=5,column=1,sticky=W)
     
     roots.mainloop() # This just makes the window keep open, we will destroy it soon
+    
+def favTeamSelect(*args):
+    print dropVar.get()
+    
+def FSSignup():
+    with open(creds, 'a') as f: # Creates a document using the variable we made at the top. 'a' is for append
+        f.write(nameE.get()) # nameE is the variable we were storing the input to. Tkinter makes us use .get() to get the actual string.
+        f.write('\n') # Splits the line so both variables are on different lines.
+        f.write(pwordE.get()) # Same as nameE just with pword var
+        f.write('\n')
+        f.write(dropVar.get()) # Same as nameE just with pword var
+        f.write('\n')
+        f.close() # Closes the file
+    
+    createUsers()
+    roots.destroy() # This will destroy the signup window. :)
+    Login()
 
 def CheckLogin():
     flag = 0
@@ -90,17 +133,7 @@ def CheckLogin():
         rlbl = Label(r, text='\n[!] Invalid Login')
         rlbl.pack()
         r.mainloop()    
-def FSSignup():
-    with open(creds, 'a') as f: # Creates a document using the variable we made at the top. 'a' is for append
-        f.write(nameE.get()) # nameE is the variable we were storing the input to. Tkinter makes us use .get() to get the actual string.
-        f.write('\n') # Splits the line so both variables are on different lines.
-        f.write(pwordE.get()) # Same as nameE just with pword var
-        f.write('\n')
-        f.close() # Closes the file
-    
-    createUsers()
-    roots.destroy() # This will destroy the signup window. :)
-
+        
 def DelUser():
     os.remove(creds) # Removes the file
     rootA.destroy() # Destroys the login window
@@ -116,7 +149,8 @@ def createUsers():
             while 1:
                 uname = f.next().rstrip()
                 pword = f.next().rstrip()
-                user = User(uname,pword)
+                favTeam = f.next().rstrip()
+                user = User(uname,pword,favTeam)
                 userList.append(user)
                 
         except: StopIteration
@@ -128,6 +162,4 @@ if os.path.isfile(creds):
     Login()
 else: # This if else statement checks to see if the file exists. If it does it will go to Login, if not it will go to Signup :)
     Signup()
-    
-    
     
