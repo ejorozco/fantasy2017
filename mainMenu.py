@@ -11,7 +11,6 @@ def menu(User):
     global r
     r = Tk() # Opens new window
     string = "Fantasy Football Manger 2017"
-    #string = "Welcome " + User.username
     r.title(string)
     r.geometry('450x450') # Makes the window a certain size
     getPic = getTeamPic(User.favoriteTeam)
