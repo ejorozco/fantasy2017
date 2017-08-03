@@ -30,6 +30,7 @@ def research():
     searchB.grid(columnspan=1, sticky='WE')
  
 
+
 def search():
     '''
     print 'search'
