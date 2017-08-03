@@ -7,13 +7,12 @@ The user of this python application has the ability to create an account to cust
 football team rosters to thier liking.
 
 First the user must create an account then sign in using thier credentials
-![Alt text](/fantasy2017/pics/loginWin.jpeg ?raw=true "Login")
+![ScreenShot](https://raw.github.com/{ejorozco}/{fantasy2017}/{pics}/{loginWin.png})
 
 After login, th eplayer has the choice to edit thier football linup, simulate a game, or reseach Player stats
-![Alt text](/fantasy2017/pics/user.jpeg ?raw=true "user profile")
 
 User can reseach Football player stats from the NFL database
-![Alt text](/fantasy2017/pics/playerStats.jpeg ?raw=true "playerStats")
+
 
 Use is for recreational purposes. Have fun and enjoy fantasy football
 
